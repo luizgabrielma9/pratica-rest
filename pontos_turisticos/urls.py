@@ -25,7 +25,7 @@ from avaliacoes.api.viewsets import AvaliacaoViewSet
 # REST
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'pontoturistico', PontoTuristicoViewSet)
+router.register(r'pontoturistico', PontoTuristicoViewSet, basename='PontoTuristico')
 router.register(r'atracoes', AtracoesViewSet)
 router.register(r'enderecos', EnderecoViewSet)
 router.register(r'comentarios', ComentarioViewSet)

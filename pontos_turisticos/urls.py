@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
 from core import views
 from core.api.viewsets import PontoTuristicoViewSet
 from atracoes.api.viewsets import AtracoesViewSet
 from enderecos.api.viewsets import EnderecoViewSet
 from comentarios.api.viewsets import ComentarioViewSet
 from avaliacoes.api.viewsets import AvaliacaoViewSet
+from django.conf import settings
 
 # REST
 from rest_framework import routers
@@ -34,4 +36,4 @@ router.register(r'avaliacoes', AvaliacaoViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

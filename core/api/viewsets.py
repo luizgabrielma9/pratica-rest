@@ -40,14 +40,15 @@ class PontoTuristicoViewSet(ModelViewSet):
     # Assim como está, simula o comportamento padrão do
     # método create (não da melhor forma, provavelmente)
     def create(self, request, *args, **kwargs):
-        serializer = PontoTuristicoSerializer(data=request.data)
+        # serializer = PontoTuristicoSerializer(data=request.data)
         
-        if serializer.is_valid():
-            ponto_turistico = PontoTuristico.objects.create(**serializer.data)
-            ponto_turistico.save()
-            return Response(serializer.data, status=201)
-        else:
-            return Response(serializer.errors, status=400)
+        # if serializer.is_valid():
+        #     ponto_turistico = PontoTuristico.objects.create(**serializer.data)
+        #     ponto_turistico.save()
+        #     return Response(serializer.data, status=201)
+        # else:
+        #     return Response(serializer.errors, status=400)
+        return super(PontoTuristicoViewSet, self).create(request, *args, **kwargs)
 
     # Comportamento alterado para apenas marcar o campo
     # 'aprovado' como False

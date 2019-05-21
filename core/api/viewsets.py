@@ -68,22 +68,33 @@ class PontoTuristicoViewSet(ModelViewSet):
             return Response(status=404)
 
     # HTTP PUT
-    # def update(self, request, *args, **kwargs):
-    #     pass
+    def update(self, request, *args, **kwargs):
+        ponto_turistico = self.get_queryset().filter(pk=kwargs['pk'])
+
+        if ponto_turistico.exists():
+            serializer = PontoTuristicoSerializer(data=request.data)
+
+            if serializer.is_valid():
+                PontoTuristico.objects.filter(pk=kwargs['pk']).update(**serializer.validated_data)
+                return Response(status=200, data=serializer.validated_data)
+            else:
+                return Response(serializer.errors, status=400)
+        else:
+            return Response(status=404)
 
     # HTTP PATCH
-    # def partial_update(self, request, *args, **kwargs):
-    #     ponto_turistico = self.get_queryset().filter(pk=kwargs['pk'])
+    def partial_update(self, request, *args, **kwargs):
+        ponto_turistico = self.get_queryset().filter(pk=kwargs['pk'])
         
-    #     if ponto_turistico.exists():
-    #         serializer = PontoTuristicoSerializer(data=request.data)
+        if ponto_turistico.exists():
+            serializer = PontoTuristicoSerializer(data=request.data, partial=True)
 
-    #         if serializer.is_valid():
-    #             ponto_turistico = ponto_turistico.update(**serializer.data)
-    #             return Response(status=204)
-    #         else:
-    #             return Response(serializer.errors, status=400)
-    #     else:
-    #         return Response(status=404)
+            if serializer.is_valid():
+                PontoTuristico.objects.filter(pk=kwargs['pk']).update(**serializer.validated_data)
+                return Response(status=200, data=serializer.validated_data)
+            else:
+                return Response(serializer.errors, status=400)
+        else:
+            return Response(status=404)
 
     

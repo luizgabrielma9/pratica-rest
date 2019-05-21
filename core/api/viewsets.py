@@ -9,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet
 from core.models import PontoTuristico
 from .serializers import PontoTuristicoSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 
 
 class PontoTuristicoViewSet(ModelViewSet):
@@ -21,7 +22,7 @@ class PontoTuristicoViewSet(ModelViewSet):
 
     # sobrescrito de ModelViewSet
     def get_queryset(self):
-        return PontoTuristico.objects.filter(aprovado=True)
+        return PontoTuristico.objects.filter(aprovado=True).order_by('id')
         # return PontoTuristico.objects.all()
 
     # sobrescrito de ModelViewSet
@@ -97,4 +98,21 @@ class PontoTuristicoViewSet(ModelViewSet):
         else:
             return Response(status=404)
 
-    
+    # Actions personalizadas
+    @action(methods=['get', 'post'], detail=True)
+    def denunciar(self, request, pk=None):
+        if request.method == 'POST':
+            return Response(status=200, data=[
+                'ALL THESE WORLDS ARE YOURS\n'
+                'EXCEPT EUROPA\n'
+                'ATTEMPT NO LANDING THERE'
+            ])
+        elif request.method == 'GET':
+            return Response(status=200, data=[
+                'The thing is hollow. It goes on forever, and '
+                '- oh my God - it\'s full of stars!'
+            ])
+        else:
+            return Response(status=200, data=[
+                'Não é POST, nem é GET. O que você tá pretendendo?'
+            ])

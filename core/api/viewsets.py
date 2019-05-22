@@ -6,10 +6,11 @@
 
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter
+from rest_framework.decorators import action
 from core.models import PontoTuristico
 from .serializers import PontoTuristicoSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
 
 
 class PontoTuristicoViewSet(ModelViewSet):
@@ -19,12 +20,19 @@ class PontoTuristicoViewSet(ModelViewSet):
     """
     # queryset = PontoTuristico.objects.all()
     serializer_class = PontoTuristicoSerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('nome', 'descricao', 'endereco__linha1')
 
     # sobrescrito de ModelViewSet
     def get_queryset(self):
         # --- Filtrando a queryset devolvida com query strings ---
         # O get com opção None abaixo não levanta exceção
         # caso o usuário não tenha passado uma query_string
+
+        # Obs.: Uma maneira de fazer isso automaticamente é com
+        # o módulo externo DjangoFilterBackends, como descrito no
+        # app atracoes
+
         id = self.request.query_params.get('id', None)
         nome = self.request.query_params.get('nome', None)
         descricao = self.request.query_params.get('descricao', None)

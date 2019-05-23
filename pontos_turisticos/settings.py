@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'core',
     'atracoes',
@@ -141,6 +142,14 @@ MEDIA_URL = '/media/'
 
 # REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': (
+        # precisa instalar o pacote django-filter
+        # e mencionar 'django_filter' em INSTALLED_APPS
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # )
 }
 

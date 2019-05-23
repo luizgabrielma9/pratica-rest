@@ -19,3 +19,10 @@ class PontoTuristico(models.Model):
     def __str__(self):
         return self.nome
 
+    # @property é ma alternativa ao SerializerMethodField, mas presente
+    # na classe do modelo em si, ao invés de no serializador
+    @property
+    def descricao_completa2(self):
+        return '%s - %s' % (self.nome, self.descricao)
+
+    

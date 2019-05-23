@@ -21,7 +21,8 @@ class PontoTuristicoViewSet(ModelViewSet):
         pontos turísticos. 
     """
     # Permissão de acesso
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    # permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (AllowAny,)
     authentication_classes = (TokenAuthentication,)
 
     # queryset = PontoTuristico.objects.all()

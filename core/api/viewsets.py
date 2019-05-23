@@ -153,3 +153,11 @@ class PontoTuristicoViewSet(ModelViewSet):
                 'The thing is hollow. It goes on forever, and '
                 '- oh my God - it\'s full of stars!'
             ])
+
+    @action(methods=['post'], detail=True)
+    def associa_atracoes(self, request, pk):
+        atracoes = request.data['ids']
+        ponto = PontoTuristico.objects.get(id=pk)
+        ponto.atracoes.set(atracoes)
+        ponto.save()
+        return Response(status=201, data=["OK"])

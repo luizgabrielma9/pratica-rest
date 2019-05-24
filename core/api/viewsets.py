@@ -57,7 +57,7 @@ class PontoTuristicoViewSet(ModelViewSet):
             queryset = queryset.filter(aprovado=aprovado)
 
         # return PontoTuristico.objects.filter(aprovado=True).order_by('id')
-        return queryset
+        return queryset.order_by('id')
 
     # sobrescrito de ModelViewSet
     # HTTP GET geral

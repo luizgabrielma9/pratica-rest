@@ -28,7 +28,7 @@ from django.conf import settings
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register(r'pontoturistico', PontoTuristicoViewSet, basename='PontoTuristico')
+# router.register(r'pontoturistico', PontoTuristicoViewSet, basename='PontoTuristico')
 router.register(r'atracoes', AtracoesViewSet)
 router.register(r'enderecos', EnderecoViewSet)
 router.register(r'comentarios', ComentarioViewSet)
@@ -37,5 +37,18 @@ router.register(r'avaliacoes', AvaliacaoViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('api-token-auth/', obtain_auth_token)
+    path('api-token-auth/', obtain_auth_token),
+    path('pontoturistico/', PontoTuristicoViewSet.as_view({
+        'get': 'list',
+        'post': 'create',
+    })),
+    path('pontoturistico/<int:pk>/', PontoTuristicoViewSet.as_view({
+        'get': 'retrieve',
+        'delete': 'destroy',
+        'put': 'update',
+        'patch': 'partial_update',
+    })),
+    path('pontoturistico/<int:pk>/atracoes/', PontoTuristicoViewSet.as_view({
+        'get': 'atracoes_ponto_turistico',
+    }))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

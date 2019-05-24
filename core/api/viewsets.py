@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, I
 from rest_framework.authentication import TokenAuthentication
 from core.models import PontoTuristico
 from .serializers import PontoTuristicoSerializer
+from atracoes.api.serializers import AtracaoSerializer
 from django.shortcuts import get_object_or_404
 
 
@@ -161,3 +162,10 @@ class PontoTuristicoViewSet(ModelViewSet):
         ponto.atracoes.set(atracoes)
         ponto.save()
         return Response(status=201, data=["OK"])
+
+    @action(methods=['get'], detail=True)
+    def atracoes_ponto_turistico(self, request, pk):
+        ponto_turistico = get_object_or_404(PontoTuristico, id=pk)
+        atracoes = ponto_turistico.atracoes.all()
+        serializer = AtracaoSerializer(atracoes, many=True)
+        return Response(status=200, data=serializer.data)

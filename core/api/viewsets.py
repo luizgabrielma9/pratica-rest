@@ -58,7 +58,7 @@ class PontoTuristicoViewSet(ModelViewSet):
             queryset = queryset.filter(aprovado=aprovado)
 
         # return PontoTuristico.objects.filter(aprovado=True).order_by('id')
-        return queryset.order_by('id')
+        return queryset.filter(aprovado=True).order_by('id')
 
     # sobrescrito de ModelViewSet
     # HTTP GET geral
@@ -165,7 +165,58 @@ class PontoTuristicoViewSet(ModelViewSet):
 
     @action(methods=['get'], detail=True)
     def atracoes_ponto_turistico(self, request, pk):
-        ponto_turistico = get_object_or_404(PontoTuristico, id=pk)
-        atracoes = ponto_turistico.atracoes.all()
-        serializer = AtracaoSerializer(atracoes, many=True)
-        return Response(status=200, data=serializer.data)
+        # ponto_turistico = get_object_or_404(PontoTuristico, id=pk)
+        queryset = self.get_queryset()
+        ponto_turistico = queryset.filter(id=pk)
+
+        if ponto_turistico.exists():
+            ponto_turistico = ponto_turistico.last()
+            atracoes = ponto_turistico.atracoes.all()
+            serializer = AtracaoSerializer(atracoes, many=True)
+            return Response(status=200, data=serializer.data)
+        else:
+            return Response(status=404)
+
+
+    @action(methods=['get'], detail=True)
+    def retrieve_atracao_ponto_turistico(self, request, pk, pk_atracao):
+        queryset = self.get_queryset()
+        ponto_turistico = queryset.filter(id=pk)
+
+        if ponto_turistico.exists():
+            atracoes = ponto_turistico.last().atracoes
+            atracao = atracoes.filter(id=pk_atracao)
+            
+            if atracao.exists():
+                serializer = AtracaoSerializer(atracao.last())
+                return Response(status=200, data=serializer.data)
+            else:
+                return Response(
+                    status=404,
+                    data={"detail": 'A atração não existe ou não '
+                    'pertence ao ponto turístico mencionado.'}
+                )
+        else:
+            return Response(status=404)
+
+
+    @action(methods=['delete'], detail=True)
+    def apagar_atracao_ponto_turistico(self, request, pk, pk_atracao):
+        queryset = self.get_queryset()
+        ponto_turistico =  queryset.filter(id=pk)
+
+        if ponto_turistico.exists():
+            atracoes = ponto_turistico.last().atracoes
+            atracao = atracoes.filter(id=pk_atracao)
+
+            if atracao.exists():
+                atracao.last().delete()
+                return Response(status=204)
+            else:
+                return Response(
+                    status=404,
+                    data={"detail": 'A atração não existe ou não '
+                    'pertence ao ponto turístico mencionado.'}
+                )
+        else:
+            return Response(status=404)

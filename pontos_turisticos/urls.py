@@ -50,5 +50,11 @@ urlpatterns = [
     })),
     path('pontoturistico/<int:pk>/atracoes/', PontoTuristicoViewSet.as_view({
         'get': 'atracoes_ponto_turistico',
-    }))
+    })),
+    path('pontoturistico/<int:pk>/atracoes/<int:pk_atracao>/',
+        PontoTuristicoViewSet.as_view({
+            'get': 'retrieve_atracao_ponto_turistico',
+            'delete': 'apagar_atracao_ponto_turistico'
+        })
+    )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, I
 from rest_framework.authentication import TokenAuthentication
 from core.models import PontoTuristico
 from .serializers import PontoTuristicoSerializer
+from atracoes.models import Atracao
 from atracoes.api.serializers import AtracaoSerializer
 from django.shortcuts import get_object_or_404
 
@@ -155,6 +156,9 @@ class PontoTuristicoViewSet(ModelViewSet):
                 '- oh my God - it\'s full of stars!'
             ])
 
+    # Funciona automaticamente quando se usa routers.
+    # É necessário adicionar uma rota em urls.py quando não 
+    # for usar routers
     @action(methods=['post'], detail=True)
     def associa_atracoes(self, request, pk):
         atracoes = request.data['ids']
@@ -174,6 +178,25 @@ class PontoTuristicoViewSet(ModelViewSet):
             atracoes = ponto_turistico.atracoes.all()
             serializer = AtracaoSerializer(atracoes, many=True)
             return Response(status=200, data=serializer.data)
+        else:
+            return Response(status=404)
+
+
+    @action(methods=['post'], detail=True)
+    def adiciona_atracao_ponto_turistico(self, request, pk):
+        queryset = self.get_queryset()
+        ponto_turistico = queryset.filter(id=pk)
+
+        if ponto_turistico.exists():
+            serializer = AtracaoSerializer(data=request.data)
+            
+            if serializer.is_valid():
+                ponto_turistico = ponto_turistico.last()
+                atracao = Atracao.objects.create(**serializer.data)
+                ponto_turistico.atracoes.add(atracao)
+                return Response(status=201, data=serializer.data)
+            else:
+                return Response(status=400, data=serializer.errors)
         else:
             return Response(status=404)
 
